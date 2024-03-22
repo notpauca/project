@@ -1,0 +1,43 @@
+.logo {
+  padding: 5px;
+  width: auto;
+}
+
+body { 
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 1)), url("./assets/background.jpg");
+  background-size: cover;
+  min-height: 100vh;
+}
+
+.icon {
+  padding: 1px;
+  height: auto;
+  width: auto; 
+  color: #E64628;
+  margin-top: -3px;
+  margin-right: 8px
+}
+
+.list-group-item:hover {
+  background-color: #fadad4;
+  transition-duration: 500ms;
+}
+
+.Application-List-Entry {
+  color: #E64628;
+  text-decoration: none;
+}
+
+.nav-link {
+  color: #E64628;
+  text-decoration: none;
+}
+
+html {
+  background-color: black;
+}
+
+iframe {
+  height:1000px; 
+  width: 1000px;
+}
