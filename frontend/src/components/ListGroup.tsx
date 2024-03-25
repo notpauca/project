@@ -61,23 +61,19 @@ function makeIcon(type: string): ReactElement {
     }
 }
 
-
-
 const api: string = "http://localhost:3000"; 
 
 function ListGroup() {
     function SwitchName() {
         if (SortBy == SortOpts.byName) {
-            console.log("switching directions!");
-            setSortAscending(!isSortAscending); 
+            setSortAscending(false); 
         }
         setSortBy(SortOpts.byName);
     }
     
     function SwitchDate() {
         if (SortBy == SortOpts.byDate) {
-            console.log("switching directions!");
-            setSortAscending(!isSortAscending); 
+            setSortAscending(false); 
         }
         setSortBy(SortOpts.byDate);
     }
@@ -88,11 +84,11 @@ function ListGroup() {
                 ls.sort((a: FileInfo, b: FileInfo) => {
                     const nameA = a.name.toUpperCase();
                     const nameB = b.name.toUpperCase();
-                    if (nameA < nameB) {
-                        return -1;
-                    }
-                    if (nameA > nameB) {
+                    if (nameA < nameB || nameA == "PREVIOUS DIRECTORY") {
                         return 1;
+                    }
+                    if (nameA > nameB || nameB == "PREVIOUS DIRECTORY")  {
+                        return -1;
                     }
                     return 0;
                 });
@@ -116,14 +112,21 @@ function ListGroup() {
                 break; 
             }
         }
-        if (isSortAscending!=true) {setLs(ls.reverse());}
     }
+
+function SwitchSortDirection() {
+    if (isSortAscending!=true) {
+        setSortAscending(true);
+        setLs([].concat(ls[0], ls.slice(1).reverse()));
+    }
+}
+
 
     const [ls, setLs] = useState([]);
     const [fileURL, setFileURL] = useState("");
     const [contentType, setContentType] = useState(""); 
     const [SortBy, setSortBy] = useState(SortOpts.none); 
-    const [isSortAscending, setSortAscending] = useState(false); //true for first-last, false for last-first
+    const [isSortAscending, setSortAscending] = useState(true);
     useEffect(() => {
         (async () => {
             let result: Response;
@@ -132,7 +135,6 @@ function ListGroup() {
                 const blob: Blob = await result.blob();
                 setFileURL(URL.createObjectURL(blob));
                 setContentType(blob.type);
-                console.log(contentType);
                 try {
                     setLs(JSON.parse(await blob.text()));
                 } catch(err) {}
@@ -141,7 +143,8 @@ function ListGroup() {
         ();
     }, []);
 
-    useEffect(() => {Sort()}, [isSortAscending, SortBy, ls])
+    useEffect(() => {Sort()}, [SortBy])
+    useEffect(() => {SwitchSortDirection(), [isSortAscending]})
 
     switch (contentType) {
     case ("application/json"): {
@@ -151,7 +154,6 @@ function ListGroup() {
                     <li className="list-group-item">
                         <button onClick={SwitchName}>name</button>
                         <button onClick={SwitchDate}>date</button>
-
                     </li>
                     {ls.map((item: FileInfo, i: number) => (
                         <li className="list-group-item" key={"li-"+i}>
@@ -200,7 +202,6 @@ function ListGroup() {
         );
     }
     case (""): {
-        // window.location.reload();
         return (
             <p style={{color:"white"}}>Loading...</p>
 
