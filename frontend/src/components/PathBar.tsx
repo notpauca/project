@@ -1,7 +1,6 @@
 export function PathBar() {
     const path: string[] = decodeURI(window.location.pathname).split('/').slice(1,-1);
     const openFile = decodeURI(window.location.pathname).split('/')[path.length+1];
-    console.log(openFile);
     return (
         <>
             <nav className="navbar navbar-expand-lg shadow-5-strong bg-body-tertiary">

@@ -3,6 +3,8 @@ import { Fetcher } from "../App";
 import { DeviceHdd, Archive, CardImage, FileEarmarkPdf, FileMusic, Film, Folder2, File, FileEarmarkEasel, FileEarmarkText } from 'react-bootstrap-icons';
 import { FileInfo } from "../App";
 
+const PrevDirectoryEntryName = "Previous directory";
+
 enum SortOpts {
     none = 0,
     byName, 
@@ -82,12 +84,12 @@ function ListGroup() {
         switch (SortBy) {
             case (SortOpts.byName): {
                 ls.sort((a: FileInfo, b: FileInfo) => {
-                    const nameA = a.name.toUpperCase();
-                    const nameB = b.name.toUpperCase();
-                    if (nameA < nameB || nameA == "PREVIOUS DIRECTORY") {
+                    const nameA: string = a.name.toUpperCase();
+                    const nameB: string = b.name.toUpperCase();
+                    if (nameA < nameB || nameA == PrevDirectoryEntryName.toUpperCase()) {
                         return 1;
                     }
-                    if (nameA > nameB || nameB == "PREVIOUS DIRECTORY")  {
+                    if (nameA > nameB || nameB == PrevDirectoryEntryName.toUpperCase())  {
                         return -1;
                     }
                     return 0;
@@ -108,6 +110,7 @@ function ListGroup() {
                 });
                 break;
             }
+
             case (SortOpts.none): {
                 break; 
             }
@@ -117,16 +120,21 @@ function ListGroup() {
 function SwitchSortDirection() {
     if (isSortAscending!=true) {
         setSortAscending(true);
-        setLs([].concat(ls[0], ls.slice(1).reverse()));
+        if (ls[0].name == PrevDirectoryEntryName) {
+            setLs([].concat(ls[0], ls.slice(1).reverse()));
+        }
+        else {
+            setLs(ls.reverse());
+        }
     }
 }
 
 
-    const [ls, setLs] = useState([]);
-    const [fileURL, setFileURL] = useState("");
-    const [contentType, setContentType] = useState(""); 
-    const [SortBy, setSortBy] = useState(SortOpts.none); 
-    const [isSortAscending, setSortAscending] = useState(true);
+    const [ls, setLs] = useState<FileInfo[]>([]);
+    const [fileURL, setFileURL] = useState<string>("");
+    const [contentType, setContentType] = useState<string>(""); 
+    const [SortBy, setSortBy] = useState<SortOpts>(SortOpts.none); 
+    const [isSortAscending, setSortAscending] = useState<boolean>(true);
     useEffect(() => {
         (async () => {
             let result: Response;
