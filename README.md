@@ -1,7 +1,11 @@
 Projekta mērķis: 
-Izstrādāt kodu, kas
+
+Uzrakstīt programmu, kas atvieglo IZV skolēnu piekļūšanu skolas failiem.
+
 
 Darba plāns:
- – Uzlabot dizainu
+
+	– Uzlabot dizainu
+	
  – Izveidot home page
   
