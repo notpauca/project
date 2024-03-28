@@ -8,7 +8,7 @@ export function PathBar() {
                     <ul className="navbar-nav">
                         <li className="nav-item">
                             <a className="nav-link" href="/"> 
-                                home
+                                Sākums
                             </a>
                         </li>
                         {path.map((item: string, i: number) => (

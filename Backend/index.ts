@@ -10,7 +10,6 @@ Bun.serve({
     port: 3000,
     async fetch(req) {
         const path: string = decodeURI(new URL(req.url).pathname);
-        console.log("hai");
         return await GetFileButtonArray(path);
     }
 });

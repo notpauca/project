@@ -19,6 +19,7 @@ body {
 }
 
 .list-group-item:hover {
+  cursor: pointer;
   background-color: #fadad4;
   transition-duration: 500ms;
 }
@@ -33,6 +34,10 @@ body {
   text-decoration: none;
 }
 
+a {
+  display: inline-flex !important;
+}
+
 html {
   background-color: black;
 }
@@ -40,4 +45,16 @@ html {
 iframe {
   height:1000px; 
   width: 1000px;
+}
+
+.btn-primary, .btn-outline-primary:hover{
+  color: #FFFFFF;
+  background-color: #E64628 !important;
+  border-color: #E64628;
+}
+
+.btn-primary:hover, .btn-outline-primary {
+  color: #E64628;
+  background-color: #FFFFFF !important;
+  border-color: #E64628;
 }

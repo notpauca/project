@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { Fetcher } from "../App";
 import { DeviceHdd, Archive, CardImage, FileEarmarkPdf, FileMusic, Film, Folder2, File, FileEarmarkEasel, FileEarmarkText } from 'react-bootstrap-icons';
 import { FileInfo } from "../App";
@@ -110,17 +110,18 @@ function ListGroup() {
                 });
                 break;
             }
-
             case (SortOpts.none): {
-                break; 
+                return; 
             }
         }
+        setSortAscending(!isSortAscending);
     }
 
 function SwitchSortDirection() {
     if (isSortAscending!=true) {
         setSortAscending(true);
         if (ls[0].name == PrevDirectoryEntryName) {
+            //@ts-ignore
             setLs([].concat(ls[0], ls.slice(1).reverse()));
         }
         else {
@@ -159,9 +160,11 @@ function SwitchSortDirection() {
         return (
             <>
                 <ul className="list-group" style={{margin: 16}}>
-                    <li className="list-group-item">
-                        <button onClick={SwitchName}>name</button>
-                        <button onClick={SwitchDate}>date</button>
+                    <li className="list-group-item" style={{display:"flex", left:"0", cursor:"auto"}}>
+                        <p style={{marginTop:"auto", marginBottom:"auto", marginRight:"5px"}}>Kārtot pēc:</p>
+                        <button style={{columnGap:10}} {...(SortBy==SortOpts.byName)?{className:"btn btn-primary"}:{className:"btn btn-outline-primary"}} type="button" onClick={SwitchName}>vārda</button>
+                        <p style={{margin:"2px"}}></p>
+                        <button style={{columnGap:10}} {...(SortBy==SortOpts.byDate)?{className:"btn btn-primary"}:{className:"btn btn-outline-primary"}} type="button" onClick={SwitchDate}>datuma</button>
                     </li>
                     {ls.map((item: FileInfo, i: number) => (
                         <li className="list-group-item" key={"li-"+i}>
