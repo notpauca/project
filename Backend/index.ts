@@ -51,7 +51,20 @@ async function GetFileButtonArray(path: string): Promise<Response> {
                     res.push(new FileInfo(element, element.substring(element.lastIndexOf('.') + 1), path + element, childInfo.birthtime));
                 }
             }
-            return new Response(JSON.stringify(res), {
+
+            if (Names.indexOf("readme.md") != -1) {
+                const readme: string = await fs.readFile(root_path + "readme.md", "utf-8");
+                return new Response(JSON.stringify({
+                    "content": res,
+                    "readme": readme
+                }), {
+                    headers: { "content-type": "application/json", "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*" }
+                });
+            }
+            return new Response(JSON.stringify({
+                "content": res,
+                "readme": null
+            }), {
                 headers: { "content-type": "application/json", "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*" }
             });
         }
