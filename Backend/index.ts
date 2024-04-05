@@ -2,6 +2,12 @@ import { file } from "bun";
 import { parseJsonText } from "typescript";
 const path = require('path');
 
+const headers = {
+    "content-type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "*"
+};
+
 const fs = require("fs").promises;
 
 const root_path = "/Users/pauca/Desktop/";
@@ -10,9 +16,17 @@ Bun.serve({
     port: 3000,
     async fetch(req) {
         const path: string = decodeURI(new URL(req.url).pathname);
+        console.log(path);
+        if (path == "/auth") {
+            const Credientials = JSON.parse(await (await req.blob()).text());
+            if (Credientials["username"] == "pauča!" && Credientials["password"] == "caw") {
+                return new Response("wowsers", {headers: {"Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*" }});
+            }
+        }
         return await GetFileButtonArray(path);
+        }
     }
-});
+);
 
 class FileInfo {
     private name: string;
@@ -31,7 +45,7 @@ async function GetFileButtonArray(path: string): Promise<Response> {
     try {
         const fileInfo = await fs.stat(root_path + path);
         if (fileInfo.isFile()) {
-            return new Response(await Bun.file(root_path + path), { headers: { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*" } });
+            return new Response(Bun.file(root_path + path), { headers: { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*" } });
         }
         else if (fileInfo.isDirectory()) {
             if (path[path.length - 1] != '/') {
@@ -58,14 +72,14 @@ async function GetFileButtonArray(path: string): Promise<Response> {
                     "content": res,
                     "readme": readme
                 }), {
-                    headers: { "content-type": "application/json", "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*" }
+                    headers: headers
                 });
             }
             return new Response(JSON.stringify({
                 "content": res,
                 "readme": null
             }), {
-                headers: { "content-type": "application/json", "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*" }
+                headers: headers
             });
         }
     }

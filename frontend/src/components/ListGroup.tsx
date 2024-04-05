@@ -1,7 +1,7 @@
 import { ReactElement, useEffect, useState } from 'react';
-import { Fetcher } from "../App";
+import { Fetcher } from "../pages/Root";
 import { DeviceHdd, Archive, CardImage, FileEarmarkPdf, FileMusic, Film, Folder2, File, FileEarmarkEasel, FileEarmarkText } from 'react-bootstrap-icons';
-import { FileInfo } from "../App";
+import { FileInfo } from "../pages/Root";
 import Markdown from 'react-markdown';
 
 const PrevDirectoryEntryName = "Previous directory";
@@ -66,7 +66,7 @@ function makeIcon(type: string): ReactElement {
 
 const api: string = "http://localhost:3000";
 
-function ListGroup() {
+function ListGroup(): JSX.Element{
     function SwitchName() {
         if (SortBy == SortOpts.byName) {
             setSortAscending(false);
@@ -121,8 +121,8 @@ function ListGroup() {
     function SwitchSortDirection() {
         if (isSortAscending != true) {
             setSortAscending(true);
+            //@ts-ignore
             if (ls[0].name == PrevDirectoryEntryName) {
-                //@ts-ignore
                 setLs([].concat(ls[0], ls.slice(1).reverse()));
             }
             else {
@@ -181,7 +181,12 @@ function ListGroup() {
                             </li>
                         ))}
                     </ul>
-                    <Markdown>{readme}</Markdown>
+                    {
+                        readme
+                            ? <div className='container-fluid readme'><Markdown>{readme}</Markdown></div>
+                            : <></>
+                    }
+
                 </>
             );
         }

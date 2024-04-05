@@ -1,60 +1,66 @@
 .logo {
-  padding: 5px;
-  width: auto;
+    padding: 5px;
+    width: auto;
 }
 
-body { 
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 1)), url("./assets/background.jpg");
-  background-size: cover;
-  min-height: 100vh;
+body {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 1)), url("./assets/background.jpg");
+    background-size: cover;
+    min-height: 100vh;
 }
 
 .icon {
-  padding: 1px;
-  height: auto;
-  width: auto; 
-  color: #E64628;
-  margin-top: -3px;
-  margin-right: 8px
+    padding: 1px;
+    height: auto;
+    width: auto;
+    color: #E64628;
+    margin-top: -3px;
+    margin-right: 8px
 }
 
 .list-group-item:hover {
-  cursor: pointer;
-  background-color: #fadad4;
-  transition-duration: 500ms;
+    cursor: pointer;
+    background-color: #fadad4;
+    transition-duration: 500ms;
 }
 
 .Application-List-Entry {
-  color: #E64628;
-  text-decoration: none;
+    color: #E64628;
+    text-decoration: none;
 }
 
 .nav-link {
-  color: #E64628;
-  text-decoration: none;
+    color: #E64628;
+    text-decoration: none;
 }
 
 a {
-  display: inline-flex !important;
+    display: inline-flex !important;
 }
 
 html {
-  background-color: black;
+    background-color: black;
 }
 
 iframe {
-  height:1000px; 
-  width: 1000px;
+    height: 1000px;
+    width: 1000px;
 }
 
-.btn-primary, .btn-outline-primary:hover{
-  color: #FFFFFF;
-  background-color: #E64628 !important;
-  border-color: #E64628;
+.btn-primary,
+.btn-outline-primary:hover {
+    color: #FFFFFF;
+    background-color: #E64628 !important;
+    border-color: #E64628;
 }
 
-.btn-primary:hover, .btn-outline-primary {
-  color: #E64628;
-  background-color: #FFFFFF !important;
-  border-color: #E64628;
+.btn-primary:hover,
+.btn-outline-primary {
+    color: #E64628;
+    background-color: #FFFFFF !important;
+    border-color: #E64628;
+}
+
+.readme {
+    color: #FFFFFF
 }
