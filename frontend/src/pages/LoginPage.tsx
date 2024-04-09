@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 
+import bcrypt from 'bcryptjs'
 
 const api: string = "http://localhost:3000";
 
-export default function LoginPage(): JSX.Element {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [loginError, setLoginError] = useState('');
+export default function LoginPage(): React.JSX.Element {
+    const [username, setUsername] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [loginError, setLoginError] = useState<string>('');
 
     const navigate = useNavigate();
 
@@ -16,18 +17,29 @@ export default function LoginPage(): JSX.Element {
         if ('' == password || '' == username) {
             setLoginError("nepareizs lietotājvārds / parole!");
         }
-        const result = fetch(api+"/auth", {
+        const salt = await fetch(api+"/auth", {
             method: "POST", 
             headers: {
                 "Content-Type": "text/plain", 
             },
-            body: JSON.stringify({"username":username, "password":password})
+            body: JSON.stringify({"username":username})
         }).then(result => {
             return result.text();
         })
-        if (await result == "wowsers") {
-            setLoginError("works!");
-        }
+        if (!salt) {setLoginError("Nepareizs lietotājvārds!"); return; }
+        console.log(salt);
+        const passwd = bcrypt.hashSync(password, await salt);
+        console.log(passwd);
+        const userID = fetch(api+"/verify", {
+            method: "POST", 
+            headers: {
+                "Content-Type": "text/plain", 
+            },
+            body: JSON.stringify({"username":username, "password":passwd})
+        }).then(result => {
+            return result.text();
+        });
+
     }
 
     return (

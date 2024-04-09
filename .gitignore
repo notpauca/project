@@ -156,6 +156,10 @@ dist
 
 .tern-port
 
+# Databases
+
+*.db
+
 # Stores VSCode versions used for testing VSCode extensions
 
 .vscode-test
