@@ -1,10 +1,9 @@
 import { file, password } from "bun";
-import { parseJsonText } from "typescript";
-import bcrypt from 'bcryptjs'
+import ts, { parseJsonText } from "typescript";
 const path = require('path');
 import * as sqlite3 from 'sqlite3';
 const db = new sqlite3.Database('psw.db');
-
+const mime = require("mime-types");
 
 const headers = {
     "content-type": "application/json",
@@ -25,7 +24,7 @@ function getSalt(username: string) {
                 if (row) {
                     resolve(row.salt);
                 } else {
-                    resolve(null);
+                    resolve("");
                 }
             }
         });
@@ -47,27 +46,31 @@ function checkPassword(username: string, password: string) {
 Bun.serve({
     port: 3000,
     async fetch(req) {
-        const path: string = decodeURI(new URL(req.url).pathname);
-        console.log(path);
-        if (path == "/auth") {
-            const Credientials = JSON.parse(await (await req.blob()).text());
-            return new Response(await getSalt(Credientials["username"]), { headers: { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*" } });
+        const path: string = decodeURI(new URL(req.url).pathname).split("/")[1];
+        console.log(decodeURI(new URL(req.url).pathname).split("/"));
+        switch (path) {
+            case ("timetable"): {
+                return new Response(Bun.file("timetable.xlsx"), { headers: { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*" } });
+            };
+            case ("auth"): {
+                const Credientials = JSON.parse(await (await req.blob()).text());
+                return new Response(await getSalt(Credientials["username"]), { headers: { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*" } });
+            };
+            case ("verify"): {
+                const body = JSON.parse(await (await req.blob()).text());
+                console.log(body);
+                if (await checkPassword(body["username"], body["password"])) {
+                    return new Response("YOU STILL HAVE TO MAKE SESSIONS WORK, DIPSHIT!", { headers: { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*" } });
+                }
+                return new Response(null, { headers: { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*" } });
+            };
+            case ("file"): {
+                return await GetFileButtonArray("/" + decodeURI(new URL(req.url).pathname).split("/").slice(2).join("/"));
+            };
         }
-        else if (path == "/verify") {
-            const body = JSON.parse(await (await req.blob()).text());
-            console.log(body);
-            if (await checkPassword(body["username"], body["password"])) {
-                return new Response("YOU STILL HAVE TO MAKE SESSIONS WORK, DIPSHIT!", { headers: { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*" } });
-            }
-            return new Response(null, { headers: { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "*" } });
-        }
-        else if (path == "/timetable") {
-            return new Response("not ready!");
-        }
-        return await GetFileButtonArray(path);
-        }
+        return new Response(null, { status: 404 });
     }
-);
+});
 
 class FileInfo {
     private name: string;
@@ -81,6 +84,11 @@ class FileInfo {
         this.time = time;
     }
 }
+
+async function GetTimetable() {
+    console.log("TimeTable fetching doesn't work (yet), use the Python program for that!")
+}
+GetTimetable()
 
 async function GetFileButtonArray(path: string): Promise<Response> {
     try {
@@ -103,7 +111,7 @@ async function GetFileButtonArray(path: string): Promise<Response> {
                     res.push(new FileInfo(element, "folder", path + element + "/", childInfo.birthtime));
                 }
                 else if (childInfo.isFile()) {
-                    res.push(new FileInfo(element, element.substring(element.lastIndexOf('.') + 1), path + element, childInfo.birthtime));
+                    res.push(new FileInfo(element, mime.lookup(path+element), path + element, childInfo.birthtime));
                 }
             }
 

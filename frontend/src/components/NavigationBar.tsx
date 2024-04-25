@@ -7,7 +7,10 @@ export default function NavigationBar(): JSX.Element {
             <div className="container-fluid">
                 <Link className='navbar-brand' to='/'> <img src={logo} width="auto" height="100px" /> </Link>
                 <Link className="navbar-brand" to="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Home</Link>
-                <Link className="navbar-brand" to="/login">Ieiet</Link>
+                <Link className='navbar-brand' to="/timetable">Stundu saraksts</Link>
+                {localStorage.getItem("token")
+                ?<Link className="navbar-brand" to="/login">Iziet</Link>
+                :<Link className="navbar-brand" to="/login">Ieiet</Link>}
             </div>
         </nav>
     );

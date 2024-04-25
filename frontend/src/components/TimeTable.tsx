@@ -1,20 +1,28 @@
-// import { useEffect, useState } from "react";
-// import { Fetcher } from "../App";
+import { useEffect, useState } from "react";
 
-// const XLSX = require("xlsx");
+import * as  XLSX from "xlsx"
 
-// const link: string="https://rtucloud1-my.sharepoint.com/:x:/r/personal/skola_rtu_lv/Documents/aaa_process_2023_24/M%C4%81c%C4%ABbu%20process/Izmai%C5%86as%202.sem.%20.xlsx";
+const link: string="http://localhost:3000/timetable";
 
-// function TimeTable() {
-//     const [ExcelFile, setExcelFile] = useState("");
+export default function TimeTable() {
+    const [timeTable, setTimetable] = useState([[], []]);
+    useEffect(() => {
+        (async () => {
+            const res: ArrayBuffer = await (await fetch(link)).arrayBuffer();
+            const table = XLSX.read(res, {type:"array"});
+            setTimetable(XLSX.utils.sheet_to_html(table.Sheets[table.SheetNames[0]], {id:"TimeTable"}));
 
-//     useEffect(() => {
-//         (async() => {
-//             let res: Response;
-//             res = await(Fetcher(link));
-//             if (await (res).ok) {
-//                 setExcelFile(URL.createObjectURL(await (res).blob()));
-//             }
-//         })
-//     })
-// }
+                // ExcelRenderer(await new File([await res.blob()], "filename"), (err: Error, resp: any) => {
+                //     if(err) {console.log(err);}
+                //     else{
+                //         console.log(resp);
+                //         setTimetable([resp.rows, resp.cols]);
+                //     }
+                // });
+        })
+    ();}, []);
+    console.log(timeTable)
+    return (<>
+        <div className="table" dangerouslySetInnerHTML={{__html: timeTable}} />
+    </>);
+}

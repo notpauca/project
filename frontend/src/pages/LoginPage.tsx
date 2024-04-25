@@ -1,18 +1,22 @@
-import React, { useEffect, useState, useRef } from "react"
-import { useNavigate } from "react-router-dom"
-
+import React, { useEffect, useState, useRef, useContext, createContext } from "react";
+import { redirect, useNavigate } from "react-router-dom";
 import bcrypt from 'bcryptjs'
+
 
 const api: string = "http://localhost:3000";
 
 export default function LoginPage(): React.JSX.Element {
+    if (localStorage.getItem("token")) {
+        localStorage.removeItem("token");
+        console.log("huhh?");
+        redirect("/");
+    }
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [loginError, setLoginError] = useState<string>('');
-
-    const navigate = useNavigate();
-
+    
     async function submit() {
+        
         setLoginError("");
         if ('' == password || '' == username) {
             setLoginError("nepareizs lietotājvārds / parole!");
@@ -30,7 +34,7 @@ export default function LoginPage(): React.JSX.Element {
         console.log(salt);
         const passwd = bcrypt.hashSync(password, await salt);
         console.log(passwd);
-        const userID = fetch(api+"/verify", {
+        const userID = await fetch(api+"/verify", {
             method: "POST", 
             headers: {
                 "Content-Type": "text/plain", 
@@ -39,9 +43,14 @@ export default function LoginPage(): React.JSX.Element {
         }).then(result => {
             return result.text();
         });
-
+        console.log(userID);
+        if (userID == "YOU STILL HAVE TO MAKE SESSIONS WORK, DIPSHIT!") {
+            setLoginError("wowseries!");
+            localStorage.setItem("token", userID); 
+            redirect("/");
+        }
     }
-
+    
     return (
         <form>
             <div className="mb-3">

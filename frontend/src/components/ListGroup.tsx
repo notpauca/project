@@ -1,8 +1,9 @@
-import { ReactElement, useEffect, useState } from 'react';
-import { Fetcher } from "../pages/Root";
-import { DeviceHdd, Archive, CardImage, FileEarmarkPdf, FileMusic, Film, Folder2, File, FileEarmarkEasel, FileEarmarkText } from 'react-bootstrap-icons';
+import { ReactElement, useContext, useEffect, useState } from 'react';
+import { DeviceHdd, Window, Archive, CardImage, FileEarmarkPdf, FileMusic, Film, Folder2, File, FileEarmarkEasel, FileEarmarkText } from 'react-bootstrap-icons';
 import { FileInfo } from "../pages/Root";
 import Markdown from 'react-markdown';
+import { Link, redirect } from 'react-router-dom';
+import { pathProvider } from '../pages/Root';
 
 const PrevDirectoryEntryName = "Previous directory";
 
@@ -17,44 +18,50 @@ function makeIcon(type: string): ReactElement {
         case "folder": {
             return (<Folder2 className='icon' />);
         }
-        case "jpg":
-        case "webp":
-        case "png":
-        case "jpeg": {
+        case ("image/jpeg"):
+        case ("image/webp"):
+        case ("image/png"): {
             return (<CardImage className='icon' />);
         }
-        case "ogg":
-        case "mp4":
-        case "mov": {
+        case "video/mp4":
+        case "video/ogg":
+        case "video/webm": {
             return (<Film className='icon' />);
         }
-        case "md":
-        case "markdown":
-        case "docx":
-        case "txt": {
+        case "text/markdown":
+        case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+        case "application/msword":
+        case "application/rtf":
+        case "text/plain": {
             return (<FileEarmarkText className='icon' />);
         }
-        case "ppt":
-        case "pptx":
-        case "pptm": {
+        case "application/vnd.ms-powerpoint":
+        case "application/vnd.openxmlformats-officedocument.presentationml.presentation":
+        case "application/vnd.openxmlformats-officedocument.presentationml.template": 
+        case "application/vnd.ms-powerpoint.presentation.macroenabled.12": {
             return (<FileEarmarkEasel className='icon' />)
         }
-        case "mp3":
-        case "flac":
-        case "m4a": {
+        case "audio/mpeg":
+        case "audio/wav": {
             return (<FileMusic className='icon' />)
         }
-        case "iso":
-        case "img":
-        case "dmg": {
+        case "application/x-msdos-program": {
+            return <Window className='icon'/>
+        }
+
+        case "application/x-iso9660-image":
+        case "application/octet-stream":
+        case "application/x-apple-diskimage": {
             return (<DeviceHdd className='icon' />)
         }
-        case "pdf": {
+
+        case "application/pdf": {
             return (<FileEarmarkPdf className='icon' />)
         }
-        case "zip":
-        case "gz":
-        case "bz": {
+        case "application/zip":
+        case "application/vnd.rar":
+        case "application/gzip":
+        case "application/x-xz": {
             return (<Archive className='icon' />)
         }
         default: {
@@ -64,9 +71,10 @@ function makeIcon(type: string): ReactElement {
     }
 }
 
-const api: string = "http://localhost:3000";
+const api: string = "http://localhost:3000/file";
 
-function ListGroup(): JSX.Element{
+function ListGroup() {
+    const [CurrentPath, setCurrentPath] = pathProvider();
     function SwitchName() {
         if (SortBy == SortOpts.byName) {
             setSortAscending(false);
@@ -134,16 +142,15 @@ function ListGroup(): JSX.Element{
 
     const [ls, setLs] = useState([]);
     const [readme, setReadme] = useState<string>("");
-    const [fileURL, setFileURL] = useState<string>("");
     const [contentType, setContentType] = useState<string>("");
     const [SortBy, setSortBy] = useState<SortOpts>(SortOpts.none);
     const [isSortAscending, setSortAscending] = useState<boolean>(true);
     useEffect(() => {
         (async () => {
-            const result: Response = await Fetcher(window.location.pathname);
+            window.history.replaceState(null, "", CurrentPath);
+            const result: Response = await fetch(api + CurrentPath, { method: "GET", mode: "cors" });
             if (result.ok) {
                 const blob: Blob = await result.blob();
-                setFileURL(URL.createObjectURL(blob));
                 setContentType(blob.type);
                 try {
                     setLs(JSON.parse(await blob.text())["content"]);
@@ -151,8 +158,8 @@ function ListGroup(): JSX.Element{
                 } catch (err) { }
             }
         })
-            ();
-    }, []);
+    ();
+    }, [CurrentPath]);
     useEffect(() => { Sort() }, [SortBy])
     useEffect(() => { SwitchSortDirection(), [isSortAscending] })
 
@@ -160,74 +167,38 @@ function ListGroup(): JSX.Element{
         case ("application/json"): {
             return (
                 <>
-                    <ul className="list-group" style={{ margin: 16 }}>
+                    <ul className="list-group">
                         <li className="list-group-item" style={{ display: "flex", left: "0", cursor: "auto" }}>
                             <p style={{ marginTop: "auto", marginBottom: "auto", marginRight: "5px" }}>Kārtot pēc:</p>
                             <button style={{ columnGap: 10 }} {...(SortBy == SortOpts.byName) ? { className: "btn btn-primary" } : { className: "btn btn-outline-primary" }} type="button" onClick={SwitchName}>vārda</button>
                             <p style={{ margin: "2px" }}></p>
                             <button style={{ columnGap: 10 }} {...(SortBy == SortOpts.byDate) ? { className: "btn btn-primary" } : { className: "btn btn-outline-primary" }} type="button" onClick={SwitchDate}>datuma</button>
                         </li>
-                        {ls.map((item: FileInfo, i: number) => (
-                            <li className="list-group-item" key={"li-" + i}>
-                                <a href={item.path} className='Application-List-Entry' style={{ display: "flex", width: "100%", justifyContent: "left", textAlign: "center" }}>
-                                    {makeIcon(item.type)}
-                                    <p style={{ marginBottom: 0 }}>{item.name}</p>
-                                    {
-                                        item.time
-                                            ? <p style={{ marginLeft: "auto", marginBottom: 0 }}>{new Date(item.time).toLocaleDateString("lv")}</p>
-                                            : <></>
-                                    }
-                                </a>
-                            </li>
-                        ))}
+                        {
+                            ls.map((item: FileInfo, i: number) => (
+                                <li className="list-group-item" key={"li-" + i}>
+                                    <Link onClick={() => {
+                                        setCurrentPath(item.path);
+                            }} className='Application-List-Entry' style={{ display: "flex", width: "100%", justifyContent: "left", textAlign: "center" }}>
+                                        {makeIcon(item.type)}
+                                        <p style={{ marginBottom: 0 }}>{item.name}</p>
+                                        {
+                                            item.time
+                                                ? <p style={{ marginLeft: "auto", marginBottom: 0 }}>{new Date(item.time).toLocaleDateString("lv")}</p>
+                                                : <></>
+                                        }
+                                    </Link>
+                                </li>
+                            ))
+                        }
                     </ul>
                     {
                         readme
-                            ? <div className='container-fluid readme'><Markdown>{readme}</Markdown></div>
+                            ? <div className='card' style={{marginTop: 8, marginBottom: 8, padding: 8}}><Markdown>{readme}</Markdown></div>
                             : <></>
                     }
 
                 </>
-            );
-        }
-        case ("image/jpeg"):
-        case ("image/webp"):
-        case ("image/png"): {
-            return (
-                <img className="rounded mx-auto d-block" src={api + window.location.pathname} />
-            );
-        }
-        case ("audio/mpeg"):
-        case ("audio/wav"): {
-            return (
-                <audio className="rounded mx-auto d-block" controls>
-                    <source src={fileURL} type={contentType} />
-                </audio>
-            );
-        }
-        case ("video/mp4"):
-        case ("video/ogg"):
-        case ("video/webm"): {
-            return (
-                <video className="rounded mx-auto d-block" controls>
-                    <source src={fileURL} type={contentType} />
-                </video>
-            );
-        }
-        case ("application/pdf"): {
-            return (
-                <a href={fileURL}>open file</a>
-            );
-        }
-        case (""): {
-            return (
-                <p style={{ color: "white" }}>Loading...</p>
-
-            )
-        }
-        default: {
-            return (
-                <a href={fileURL}>Download file</a>
             );
         }
     }

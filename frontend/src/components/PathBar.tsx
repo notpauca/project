@@ -1,26 +1,27 @@
-export default function PathBar() {
-    const path: string[] = decodeURI(window.location.pathname).split('/').slice(1, -1);
-    const openFile = decodeURI(window.location.pathname).split('/')[path.length + 1];
+import { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { pathProvider } from "../pages/Root";
+
+
+export default function PathBar(props: any) {
+    const [currentPath, setCurrentPath] = pathProvider();
+    const path = currentPath.split("/").slice(1);
+
     return (
         <>
             <div className="container-fluid">
                 <nav aria-label="breadcrumb">
                     <ol className="breadcrumb">
                         <li className="breadcrumb-item active">
-                            <a className="nav-link" href="/">
+                            <Link className="nav-link" to="/">
                                 Sākums
-                            </a>
+                            </Link>
                         </li>
                         {path.map((item: string, i: number) => (
                             <li className="breadcrumb-item active" key={"li-" + i}>
-                                <a href={"/" + path.slice(0, i + 1).join('/') + "/"} className="nav-link">{item}</a>
+                                <Link to={path.join('/')} onClick={() => {setCurrentPath(path.join('/')); return true;}} className="nav-link">{item}</Link>
                             </li>
                         ))}
-                        {
-                            openFile
-                                ? <li className="breadcrumb-item active"><a className="nav-link" href={window.location.pathname}>{openFile}</a></li>
-                                : <></>
-                        }
                     </ol>
                 </nav>
             </div>

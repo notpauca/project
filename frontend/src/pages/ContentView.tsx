@@ -1,11 +1,11 @@
 import PathBar from "../components/PathBar"
 import ListGroup from "../components/ListGroup"
 
-export default function View(): JSX.Element {
+export default function ContentViewer(): JSX.Element {   
     return (
-        <>
-            <PathBar/>
+        <div className="container-xl">
+            <PathBar />
             <ListGroup/>
-        </>
+        </div>
     )
 };
