@@ -13,6 +13,7 @@ Uzglabāto failu apjomu ierobežo mākonim atvēlētais servera atmiņas daudzum
 
 No GitHub uz linux servera klonē programmatūru. Serverim nepieciešami 2 atvērti termināļi.
 
+>[!IMPORTANT]
 >uz 1. termināļa:
 >
 >cd Backend
@@ -21,6 +22,7 @@ No GitHub uz linux servera klonē programmatūru. Serverim nepieciešami 2 atvē
 >
 >uz 2. termināļa (izstrādes versijai):
 >cd frontend
+>
 >bun run dev
 
 Skolēns var piekļūt mājaslapai ar iegūto ip adresi.
