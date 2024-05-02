@@ -29,7 +29,7 @@ Skolēns var piekļūt mājaslapai ar iegūto ip adresi.
 
 **Izmatotās tehnoloģijas**
 
-Izmantotās bibliotēkas: BunJS, ReactJS, Vite, bootstrap
+BunJS, ReactJS, Vite, bootstrap
 
 **Atsauces uz autoriem**
 
