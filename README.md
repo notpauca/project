@@ -9,7 +9,7 @@
 
 Uzglabāto failu apjomu ierobežo mākonim atvēlētais servera atmiņas daudzums.
 
-##Veicamās darbības programmatūras palaišanai
+## Veicamās darbības programmatūras palaišanai
 
 >[!IMPORTANT]
 >
