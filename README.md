@@ -1,9 +1,9 @@
 **Apraksts par funkcionalitāti**
 
 Šī ir mājaslapa, kur skolotāji un skolēni var uzglabāt mācību procesam nepieciešamos dokumentus. Papildus tam ir pievienota papildus funkcionalitāte, lai programmu padarītu piemērotāku mācību procesam, piemēram:
-Viegli pieejams stundu saraksts
-Mapīte ar skolas oficiālajiem dokumentu un prezentāciju šabloniem
-TBD
+>Viegli pieejams stundu saraksts
+>Mapīte ar skolas oficiālajiem dokumentu un prezentāciju šabloniem
+>TBD
 
 **Programmatūras ierobežojumi un tehniskais apraksts**
 
