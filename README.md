@@ -1,11 +1,11 @@
-##Apraksts par funkcionalitāti
+## Apraksts par funkcionalitāti
 
 Šī ir mājaslapa, kur skolotāji un skolēni var uzglabāt mācību procesam nepieciešamos dokumentus. Papildus tam ir pievienota papildus funkcionalitāte, lai programmu padarītu piemērotāku mācību procesam, piemēram:
 * Viegli pieejams stundu saraksts
 * Mapīte ar skolas oficiālajiem dokumentu un prezentāciju šabloniem
 * TBD
 
-##Programmatūras ierobežojumi un tehniskais apraksts
+## Programmatūras ierobežojumi un tehniskais apraksts
 
 Uzglabāto failu apjomu ierobežo mākonim atvēlētais servera atmiņas daudzums.
 
@@ -28,10 +28,10 @@ Uzglabāto failu apjomu ierobežo mākonim atvēlētais servera atmiņas daudzum
 >
 >Skolēns var piekļūt mājaslapai ar iegūto ip adresi.
 
-##Izmatotās tehnoloģijas
+## Izmatotās tehnoloģijas
 
 BunJS, ReactJS, Vite, bootstrap
 
-##Atsauces uz autoriem
+## Atsauces uz autoriem
 
 Pauls Apšenieks, Matīss Gercāns, Līga Blumfelde, Kristaps Grava
