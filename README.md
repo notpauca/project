@@ -9,8 +9,9 @@
 
 Uzglabāto failu apjomu ierobežo mākonim atvēlētais servera atmiņas daudzums.
 
+##Veicamās darbības programmatūras palaišanai
+
 >[!IMPORTANT]
->**Veicamās darbības programmatūras palaišanai**
 >
 >No GitHub uz linux servera klonē programmatūru. Serverim nepieciešami 2 atvērti termināļi.
 >
